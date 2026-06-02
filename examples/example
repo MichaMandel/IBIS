@@ -2,7 +2,7 @@ library(readr)
 library(dplyr)
 
 source("IBIS/github_code/calculate_ibis.R")
-file.name = "IBIS/ebd_IL_202604_202605_smp_relApr-2026/ebd_IL_202604_202605_smp_relApr-2026.txt"
+file.name = "IBIS/ebd_IL_May-2026.txt"
 
 ebd <- read_tsv(
   file.name,
@@ -13,7 +13,7 @@ ebd <- read_tsv(
 # Example: Global Big Day in Israel, using common names
 ibis_results <- calculate_ibis(
   ebd = ebd,
-  date = "2026-04-09",
+  date = "2026-05-09",
   taxon_var = "COMMON NAME",
   region = "all",
   species_only = TRUE
