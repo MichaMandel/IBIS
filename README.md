@@ -191,7 +191,7 @@ In eBird, the column `EXOTIC CODE` indicates whether a taxon is native or introd
 | `P` | Provisional |
 | `X` | Escapee |
 
-The default setting is:
+The default setting is Native + Naturalized:
 
 ```r
 exotic_codes = c("", "N")
