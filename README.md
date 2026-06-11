@@ -178,4 +178,20 @@ ibis_results <- calculate_ibis(
 
 For precise polygon filtering, users can use spatial packages such as `sf` to select records inside a polygon before applying `calculate_ibis()`.
 
+## Exotic and introduced taxa
 
+By default, `calculate_ibis()` includes native taxa and naturalized taxa only.
+
+In eBird, the column `EXOTIC CODE` indicates whether a taxon is native or introduced:
+
+| `EXOTIC CODE` | Meaning |
+|---|---|
+| blank or missing | Native |
+| `N` | Naturalized |
+| `P` | Provisional |
+| `X` | Escapee |
+
+The default setting is:
+
+```r
+exotic_codes = c("", "N")
