@@ -16,6 +16,11 @@
 #'   Default is "STATE".
 #' @param species_only Logical. If TRUE, keeps only records with
 #'   CATEGORY == "species". Default is TRUE.
+#' @param exotic_codes Character vector of eBird exotic codes to include.
+#'   Default is c("", "N"), which keeps native taxa and naturalized taxa.
+#'   In eBird, blank or missing EXOTIC CODE values indicate native taxa,
+#'   "N" indicates naturalized, "P" indicates provisional, and "X" indicates
+#'   escapee. Use exotic_codes = NULL to skip filtering by EXOTIC CODE.
 #'
 #' @return A list with:
 #'   \describe{
@@ -26,7 +31,7 @@
 #'   }
 #'
 #' @importFrom dplyr %>% filter mutate distinct count left_join semi_join
-#'   group_by summarise arrange n_distinct if_else
+#'   group_by summarise arrange n_distinct if_else select
 #' @importFrom tidyr replace_na
 #'
 #' @export
@@ -36,7 +41,8 @@ calculate_ibis <- function(
     taxon_var = "COMMON NAME",
     region = "all",
     region_var = "STATE",
-    species_only = TRUE
+    species_only = TRUE,
+    exotic_codes = c("", "N")
 ) {
   required_cols <- c(
     "OBSERVATION DATE",
@@ -45,6 +51,10 @@ calculate_ibis <- function(
     "OBSERVER ID",
     taxon_var
   )
+  
+  if (!is.null(exotic_codes)) {
+    required_cols <- c(required_cols, "EXOTIC CODE")
+  }
   
   missing_cols <- setdiff(required_cols, names(ebd))
   
@@ -78,6 +88,22 @@ calculate_ibis <- function(
   if (species_only) {
     filtered_ebd <- filtered_ebd %>%
       filter(CATEGORY == "species")
+  }
+  
+  if (!is.null(exotic_codes)) {
+    allowed_exotic_codes <- exotic_codes
+    allowed_exotic_codes[is.na(allowed_exotic_codes)] <- ""
+    
+    filtered_ebd <- filtered_ebd %>%
+      mutate(
+        .ibis_exotic_code = if_else(
+          is.na(`EXOTIC CODE`),
+          "",
+          `EXOTIC CODE`
+        )
+      ) %>%
+      filter(.ibis_exotic_code %in% allowed_exotic_codes) %>%
+      select(-.ibis_exotic_code)
   }
   
   dat_units <- filtered_ebd %>%
