@@ -45,5 +45,5 @@ ibis_positive <- ibis_by_observer %>%
 # export to a csv file
 write_csv(
   ibis_positive,
-  "example_ibis_positive_IL_May2026.csv"
+  "ibis_positive_IL_May2026.csv"
 )
