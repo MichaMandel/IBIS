@@ -21,6 +21,14 @@ IBIS therefore uses two steps:
 
 Thus, if a shared group is the only birding unit to report a species, only the observers in that group who actually reported the species receive IBIS credit for it.
 
+## Example output
+
+To illustrate the output of the function, this repository includes example CSV files in the `examples` folder.
+
+The file `ibis_positive_IL_May2026.csv` shows observer-level IBIS results for Israel Global Big Day May 2026, including only observers with positive IBIS. 
+
+This file is one of the outputs of `calculate_ibis()`. The original eBird data files are not included in this repository.
+
 ## Installation
 
 This repository currently provides an R function rather than a full R package.
