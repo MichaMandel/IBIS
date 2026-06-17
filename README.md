@@ -43,7 +43,7 @@ install.packages(c("readr", "dplyr", "tidyr", "stringr"))
 library(readr)
 library(dplyr)
 
-source("R/calculate_ibis.R")
+source("calculate_ibis.R")
 
 ebd <- read_tsv(
   "path/to/ebd_file.txt",
@@ -60,6 +60,34 @@ ibis_results$ibis_by_observer
 ibis_results$observer_marginal_taxa
 ```
 
+For large eBird files, it is recommended to filter the file before reading it fully into R. The [`auk`](https://cornelllabofornithology.github.io/auk/) package is designed for this purpose and can filter large eBird Basic Dataset files by date before import.
+
+For example:
+
+```r
+library(auk)
+library(readr)
+
+ebd_file <- "path/to/ebd_file.txt"
+filtered_file <- "ebd_global_big_day.txt"
+
+auk_ebd(ebd_file) %>%
+  auk_date(date = "2026-04-09") %>%
+  auk_filter(file = filtered_file, overwrite = TRUE)
+
+ebd <- read_tsv(
+  filtered_file,
+  show_col_types = FALSE,
+  guess_max = 100000
+)
+
+ibis_results <- calculate_ibis(
+  ebd = ebd,
+  date = NULL
+)
+```
+
+Here `date = NULL` is used in `calculate_ibis()` because the file has already been filtered to the desired date by `auk`.
 ## Output
 
 The function returns a list with four objects:
